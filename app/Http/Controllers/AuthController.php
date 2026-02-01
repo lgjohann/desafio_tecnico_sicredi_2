@@ -2,89 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
-use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected UserService $service
+    ) {}
 
-    public function register(Request $request)
+    public function register(RegisterUserRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|min:3|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        try {
-            $token = JWTAuth::fromUser($user);
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Error during token creation.'], 500);
-        }
+        $data = $this->service->register($request->validated());
 
         return response()->json([
-            'token' => $token,
-            'user' => UserResource::make($user),
-        ]);
+            'token' => $data['token'],
+            'user'  => new UserResource($data['user']),
+        ], 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginUserRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $credentials = $request->only('email', 'password');
-
-        try {
-            $token = JWTAuth::attempt($credentials);
-            if (!$token) {
-                return response()->json(['error' => 'invalid credentials! Check the email and password.'], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Error during token creation.'], 500);
-        }
+        $token = $this->service->authenticate($request->validated());
 
         return response()->json([
             'token' => $token,
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-        ]);
-    }
+        ], 200);
 
-    public function logout()
+    }
+    public function logout(): JsonResponse
     {
-        try {
-            JWTAuth::invalidate(JWTAuth::getToken());
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to logout, please try again.'], 500);
-        }
+        $this->service->logout();
 
         return response()->json(['message' => 'Successfully logged out'], 200);
     }
 
-    public function getUser()
+    public function getUser(): JsonResponse
     {
-        try {
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-            return response()->json(UserResource::make($user));
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Failed to fetch user profile'], 500);
-        }
+        $user = Auth::user();
+
+        if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+        return response()->json(new UserResource($user), 200);
     }
 
 }
