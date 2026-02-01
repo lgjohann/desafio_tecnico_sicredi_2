@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
@@ -41,7 +42,7 @@ class UserService
         $token = JWTAuth::attempt($credentials);
 
         if (!$token) {
-            throw new Exception('Invalid credentials! Please check your email and password.', 401);
+            throw new AuthenticationException('Invalid credentials! Please check your email and password.');
         }
 
         return $token;

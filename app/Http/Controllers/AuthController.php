@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AuthController extends Controller
 {
@@ -47,7 +48,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) return response()->json(['error' => 'User not found'], 404);
+        if (!$user) throw new NotFoundHttpException("User not found");
 
         return response()->json(new UserResource($user), 200);
     }
