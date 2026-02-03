@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Models\User;
 use Exception;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Log;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -50,7 +50,7 @@ class UserService
 
         if (!$token) {
             Log::warning('Failed login attempt', ['email' => $credentials['email']]);
-            throw new AuthenticationException('Invalid credentials! Please check your email and password.');
+            throw new InvalidCredentialsException('Invalid credentials! Please check your email and password.');
         }
 
         Log::info('JWT generated successfully for user', ['email' => $credentials['email']]);

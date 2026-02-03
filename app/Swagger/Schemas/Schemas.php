@@ -18,6 +18,21 @@ use OpenApi\Attributes as OA;
     type: "object"
 )]
 
+#[OA\Schema(
+    schema: "AssociateResource",
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "name", type: "string", example: "Jubileu Souza"),
+        new OA\Property(property: "cpf", type: "string", example: "964.711.500-83"),
+        new OA\Property(property: "email", type: "string", example: "jubisouza@email.com"),
+        new OA\Property(property: "telephone", type: "string", example: "11999999999"),
+        new OA\Property(property: "city", type: "string", example: "Rio Grande do Sul"),
+        new OA\Property(property: "state", type: "string", example: "RS"),
+        new OA\Property(property: "created_at", type: "string", format: "date-time"),
+    ],
+    type: "object"
+)]
+
 // ==================== SCHEMAS DE REQUEST ====================
 
 #[OA\Schema(
@@ -70,6 +85,84 @@ use OpenApi\Attributes as OA;
     type: "object"
 )]
 
+#[OA\Schema(
+    schema: "AssociateCreateRequest",
+    required: ['name', 'email', 'cpf', 'telephone', 'city', 'state'],
+    properties: [
+        new OA\Property(
+            property: 'name',
+            type: 'string',
+            example: 'Maria Souza'
+        ),
+        new OA\Property(
+            property: 'email',
+            type: 'string',
+            format: 'email',
+            example: 'maria@example.com'
+        ),
+        new OA\Property(
+            property: 'cpf',
+            type: 'string',
+            example: '12345678900'
+        ),
+        new OA\Property(
+            property: 'telephone',
+            type: 'string',
+            example: '964.711.500-83'
+        ),
+        new OA\Property(
+            property: 'city',
+            type: 'string',
+            example: 'São Paulo'
+        ),
+        new OA\Property(
+            property: 'state',
+            description: 'Sigla de 2 letras',
+            type: 'string',
+            example: 'SP'
+        )
+    ],
+    type: "object"
+)]
+
+#[OA\Schema(
+    schema: "AssociateUpdateRequest",
+    properties: [
+        new OA\Property(
+            property: 'name',
+            type: 'string',
+            example: 'Maria Souza'
+        ),
+        new OA\Property(
+            property: 'email',
+            type: 'string',
+            format: 'email',
+            example: 'maria@example.com'
+        ),
+        new OA\Property(
+            property: 'cpf',
+            type: 'string',
+            example: '12345678900'
+        ),
+        new OA\Property(
+            property: 'telephone',
+            type: 'string',
+            example: '964.711.500-83'
+        ),
+        new OA\Property(
+            property: 'city',
+            type: 'string',
+            example: 'São Paulo'
+        ),
+        new OA\Property(
+            property: 'state',
+            description: 'Sigla de 2 letras',
+            type: 'string', example: 'SP'
+        )
+    ],
+    type: "object"
+)]
+
 // ==================== SCHEMAS DE RESPONSE ====================
 
 #[OA\Schema(
@@ -115,6 +208,91 @@ use OpenApi\Attributes as OA;
             property: "message",
             type: "string",
             example: "Successfully logged out"
+        )
+    ],
+    type: "object"
+)]
+
+#[OA\Schema(
+    schema: "PaginationMeta",
+    properties: [
+        new OA\Property(
+            property: "current_page",
+            type: "integer",
+            example: 1
+        ),
+        new OA\Property(
+            property: "from",
+            type: "integer",
+            example: 1
+        ),
+        new OA\Property(
+            property: "last_page",
+            type: "integer",
+            example: 5
+        ),
+        new OA\Property(
+            property: "per_page",
+            type: "integer",
+            example: 10
+        ),
+        new OA\Property(
+            property: "to",
+            type: "integer",
+            example: 10
+        ),
+        new OA\Property(
+            property: "total",
+            type: "integer",
+            example: 50
+        ),
+    ],
+    type: "object"
+)]
+#[OA\Schema(
+    schema: "PaginationLinks",
+    properties: [
+        new OA\Property(
+            property: "first",
+            type: "string",
+            example: "http://api...?page=1"
+        ),
+        new OA\Property(
+            property: "last",
+            type: "string",
+            example: "http://api...?page=5"
+        ),
+        new OA\Property(
+            property: "prev",
+            type: "string",
+            example: null,
+            nullable: true
+        ),
+        new OA\Property(
+            property: "next",
+            type: "string",
+            example: "http://api...?page=2",
+            nullable: true
+        ),
+    ],
+    type: "object"
+)]
+
+#[OA\Schema(
+    schema: "PaginatedResponse",
+    properties: [
+        new OA\Property(
+            property: 'data',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/AssociateResource')
+        ),
+        new OA\Property(
+            property: 'links',
+            ref: '#/components/schemas/PaginationLinks'
+        ),
+        new OA\Property(
+            property: 'meta',
+            ref: '#/components/schemas/PaginationMeta'
         )
     ],
     type: "object"

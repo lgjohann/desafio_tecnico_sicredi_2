@@ -15,6 +15,206 @@
         }
     ],
     "paths": {
+        "/api/associates": {
+            "get": {
+                "tags": [
+                    "Associates"
+                ],
+                "summary": "Listar associados (paginado)",
+                "operationId": "2fa1546a6a9d058393588fac2e6dac12",
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de associados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/AssociateResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "$ref": "#/components/schemas/PaginationLinks"
+                                        },
+                                        "meta": {
+                                            "$ref": "#/components/schemas/PaginationMeta"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Associates"
+                ],
+                "summary": "Cadastrar novo associado",
+                "operationId": "3dca2f69fc083f44b5070aa2c8d69ba7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssociateCreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Associado criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssociateResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação (CPF inválido, Email duplicado, etc)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/associates/{id}": {
+            "put": {
+                "tags": [
+                    "Associates"
+                ],
+                "summary": "Atualizar dados do associado",
+                "operationId": "ff4c4182c5d643f2c5f8369f84a68781",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssociateUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Associado atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AssociateResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associado não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação (CPF inválido, Email duplicado, etc)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Associates"
+                ],
+                "summary": "Deletar associado",
+                "operationId": "dc2cbe02241ea17763bd988a5c0fef5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Associado deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Associate deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Associado não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/register": {
             "post": {
                 "tags": [
@@ -223,6 +423,43 @@
                 },
                 "type": "object"
             },
+            "AssociateResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Jubileu Souza"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "964.711.500-83"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jubisouza@email.com"
+                    },
+                    "telephone": {
+                        "type": "string",
+                        "example": "11999999999"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "Rio Grande do Sul"
+                    },
+                    "state": {
+                        "type": "string",
+                        "example": "RS"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
             "RegisterRequest": {
                 "required": [
                     "name",
@@ -271,6 +508,76 @@
                 },
                 "type": "object"
             },
+            "AssociateCreateRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "cpf",
+                    "telephone",
+                    "city",
+                    "state"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Maria Souza"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "maria@example.com"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "12345678900"
+                    },
+                    "telephone": {
+                        "type": "string",
+                        "example": "964.711.500-83"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "São Paulo"
+                    },
+                    "state": {
+                        "description": "Sigla de 2 letras",
+                        "type": "string",
+                        "example": "SP"
+                    }
+                },
+                "type": "object"
+            },
+            "AssociateUpdateRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Maria Souza"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "maria@example.com"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "12345678900"
+                    },
+                    "telephone": {
+                        "type": "string",
+                        "example": "964.711.500-83"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "São Paulo"
+                    },
+                    "state": {
+                        "description": "Sigla de 2 letras",
+                        "type": "string",
+                        "example": "SP"
+                    }
+                },
+                "type": "object"
+            },
             "RegisterResponse": {
                 "properties": {
                     "token": {
@@ -304,6 +611,75 @@
                     "message": {
                         "type": "string",
                         "example": "Successfully logged out"
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationMeta": {
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "from": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "to": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 50
+                    }
+                },
+                "type": "object"
+            },
+            "PaginationLinks": {
+                "properties": {
+                    "first": {
+                        "type": "string",
+                        "example": "http://api...?page=1"
+                    },
+                    "last": {
+                        "type": "string",
+                        "example": "http://api...?page=5"
+                    },
+                    "prev": {
+                        "type": "string",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "next": {
+                        "type": "string",
+                        "example": "http://api...?page=2",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "PaginatedResponse": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AssociateResource"
+                        }
+                    },
+                    "links": {
+                        "$ref": "#/components/schemas/PaginationLinks"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/PaginationMeta"
                     }
                 },
                 "type": "object"
@@ -374,7 +750,11 @@
     "tags": [
         {
             "name": "Authentication",
-            "description": "Endpoints de autenticação e gerenciamento de usuários"
+            "description": "Endpoints de autenticação"
+        },
+        {
+            "name": "Associates",
+            "description": "Endpoints para gerenciamento de Associados"
         }
     ]
 }

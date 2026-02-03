@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NotFoundException\UserNotFoundException;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Services\UserService;
@@ -10,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
 use Log;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
@@ -142,7 +142,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user) throw new NotFoundHttpException("User not found");
+        if (!$user) throw new UserNotFoundException("User not found");
 
         return response()->json(new UserResource($user), 200);
     }

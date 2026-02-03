@@ -27,10 +27,10 @@ use OpenApi\Attributes as OA;
 )]
 #[OA\Tag(
     name: 'Authentication',
-    description: 'Endpoints de autenticação e gerenciamento de usuários'
+    description: 'Endpoints de autenticação'
 )]
 #[OA\Tag(
-    name: 'Associate',
+    name: 'Associates',
     description: 'Endpoints para gerenciamento de Associados'
 )]
 abstract class Controller
