@@ -1,8 +1,8 @@
 <?php
 
+use App\Exceptions\InvalidCredentialsException;
 use App\Models\User;
 use App\Services\UserService;
-use Illuminate\Auth\AuthenticationException;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 beforeEach(function () {
@@ -49,8 +49,8 @@ it('throws an exception with 401 code when credentials are invalid', function ()
         ->once()
         ->andReturn(false);
 
-    expect(fn() => $this->userService->authenticate(['email' => 'test@test.com', 'password' => '123']))
-        ->toThrow(AuthenticationException::class, 'Invalid credentials!', 401);
+    expect(fn() => $this->userService->authenticate(['email' => 'test@test.com', 'password' => '1235678']))
+        ->toThrow(InvalidCredentialsException::class, 'Invalid credentials!', 401);
 });
 
 it('invalidates token during logout', function () {
