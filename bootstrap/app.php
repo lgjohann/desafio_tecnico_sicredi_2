@@ -1,13 +1,13 @@
 <?php
 
+use App\Exceptions\InvalidCredentialsException;
+use App\Exceptions\NotFoundException\NotFoundException;
 use App\Http\Middleware\JwtMiddleware;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 2. Authentication error/JWT (401)
-        $exceptions->render(function (AuthenticationException $e, Request $request) {
+        $exceptions->render(function (InvalidCredentialsException $e, Request $request) {
             return response()->json([
                 'path' => $request->path(),
                 'method' => $request->method(),
@@ -45,7 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // 3. Resource not found (404)
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+        $exceptions->render(function (NotFoundException $e, Request $request) {
             return response()->json([
                 'path' => $request->path(),
                 'method' => $request->method(),
