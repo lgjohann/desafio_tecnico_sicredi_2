@@ -1,59 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API Desafio Técnico Sicredi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto é uma API RESTful desenvolvida com **PHP 8.4** e **Laravel 12**, utilizando **PostgreSQL** como banco de dados.
 
-## About Laravel
+## Pré-requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **PHP 8.4** (com extensões necessárias instaladas)
+* **Composer**
+* **PostgreSQL** (Eu utilizei a versão 18)
+* **Docker & Docker Compose** (Opcional, para rodar em container)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Caso você esteja utilizando Windows
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Eu fiz o projeto utilizando Ubuntu como sistema operacional**, notei que a instalação e configuração é bem diferente da configuração no Windows, após alguns testes e anotações sobre como fazer funcionar o projeto partindo do zero, cheguei na conclusão que a maneira mais fácil de preparar o ambiente é utilizando o **[Laravel Herd](https://herd.laravel.com/windows)**. Ele instala a versão mais recente do PHP, que é utilizado pelo projeto, Composer e o ambiente de desenvolvimento de forma rápida e prática.
 
-## Learning Laravel
+É necessário apenas baixar, instalar e abrir o aplicativo para preparar o ambiente. Há algumas extensões utilizadas pelas bibliotecas JWT que exigem uma instalação mais complicada no Windows e que podem ocasionar erros ao tentar instalar as dependências do projeto, mas o Herd instala elas automaticamente.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Para o banco de dados, você pode baixar o **[PostgreSQL](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)** ou algum outro banco relacional da sua preferência.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Configuração Inicial
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+1. **Clone o repositório:**
+```bash
+   git clone git@github.com:lgjohann/desafio_tecnico_sicredi_2.git
+   cd desafio_tecnico_sicredi_2
+```
 
-### Premium Partners
+2. **Configure o ambiente:**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+   Duplique o arquivo `.env.example` e renomeie para `.env`, ou então utilize o `.env` já presente na pasta do projeto, essa é a minha configuração de ambiente.
+   Caso queira levar como exemplo.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Configure o Banco de Dados:**
 
-## Code of Conduct
+   Abra o arquivo `.env` e configure suas credenciais.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    - **Se rodar localmente:** Use `DB_HOST=localhost`
 
-## Security Vulnerabilities
+    - **Se rodar com Docker:** Use `DB_HOST=db`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Há duas maneiras de rodar o projeto: localmente ou com Docker.
+
+## Rodando Localmente
+
+Após configurar o `.env` e criar o banco de dados no seu PostgreSQL ou outro banco de dados local, execute:
+
+1. **Instale as dependências:**
+
+```bash
+composer install
+```
+
+2. **Gere a chave da aplicação:**
+
+```bash
+php artisan key:generate
+```
+
+3. **Execute as migrações do banco:**
+
+```bash
+php artisan migrate
+```
+
+4. **Inicie o servidor:**
+
+    _Recomendo o comando nativo do PHP para evitar instabilidades do **php artisan serve** no Windows. Eu não consegui fazer funcionar com o **php artisan serve** em ambiente Windows, apenas Linux._
+
+   ```bash
+   php -S localhost:8000 -t public
+   ````
+
+    O endereço da API será então em: `http://localhost:8000`
+
+---
+
+## Rodando com Docker
+
+Se preferir utilizar o Docker para isolar o ambiente:
+
+_Uma observação sobre o docker: no meu ambiente de teste Windows, os comandos não estavam rodando corretamente se executados diretamente assim:
+`docker-compose exec app composer install`, era necessário executá-los puros: `composer install` diretamente dentro do container laravel-app na aba exec do Docker Desktop. mas acredito ser algum problema do meu ambiente. De qualquer modo, leve isso em consideração em caso de erro e aplique aos outros comandos em ambiente docker._
+
+1. **Suba os containers:**
+
+     ```
+	    docker-compose up -d
+     ```
+
+2. **Execute os comandos de configuração dentro do container:**
+
+   Instalar dependências:
+
+   ```bash
+   docker-compose exec app composer install
+   ```
+
+   Gerar chave de segurança:
+
+    ```
+    docker-compose exec app php artisan key:generate
+    ```
+
+   Rodar migrações do banco:
+
+    ```
+    docker-compose exec app php artisan migrate
+    ```
+
+---
+
+## Testando a API
+
+Ao testar os endpoints utilizando o **Postman**, **Insomnia** ou similares, é obrigatório enviar o seguinte cabeçalho (Header) em todas as requisições:
+
+| **Key**  | **Value**          |
+| -------- | ------------------ |
+| `Accept` | `application/json` |
+  
+
+**Por que?**
+
+O Laravel detecta automaticamente o tipo de resposta esperada. Sem esse cabeçalho, em caso de erro (como 404 ou erro de validação), o Laravel tentará redirecionar para a página HTML anterior acessada (que não existe) em vez de retornar a mensagem de erro em JSON como esperado.
+
+---
+
+## Documentação da API (Swagger)
+
+Para acessar a documentação do Swagger, visualizar os endpoints, explicações, schemas e testar a API:
+
+**Acesse em:**
+`http://localhost:8000/api/documentation`
+
+### Gerando a documentação
+
+A documentação gerada já é a mais atualizada, mas caso seja feito uma alteração nas anotações do swagger no projeto para teste, não esqueça de gerar novamente o arquivo do Swagger.
+
+**Localmente:**
+
+```bash
+php artisan l5-swagger:generate
+````
+
+**Via Docker:**
+
+```bash
+docker-compose exec app php artisan l5-swagger:generate 
+```
+
+
+---
